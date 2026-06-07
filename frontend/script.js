@@ -312,96 +312,12 @@ async function loadProjects() {
 loadProjects();
 
 /* ============================================================
-   7. CONTACT FORM — submit to backend
+   7. CONTACT FORM — FormSubmit (no backend)
    ============================================================ */
-const submitBtn     = document.getElementById('submitContact');
-const submitText    = document.getElementById('submitText');
-const submitArrow   = document.getElementById('submitArrow');
-const submitSpinner = document.getElementById('submitSpinner');
-const formAlert     = document.getElementById('formAlert');
 
-// Input references
-const nameInput    = document.getElementById('contactName');
-const emailInput   = document.getElementById('contactEmail');
-const subjectInput = document.getElementById('contactSubject');
-const msgInput     = document.getElementById('contactMessage');
-
-function setFormLoading(loading) {
-    submitBtn.disabled       = loading;
-    submitText.textContent   = loading ? 'Sending...' : 'Send Message';
-    submitArrow.style.display   = loading ? 'none'   : 'block';
-    submitSpinner.style.display = loading ? 'block'  : 'none';
-}
-
-function showFormAlert(type, message) {
-    formAlert.className      = `form-alert ${type}`;
-    formAlert.textContent    = message;
-    formAlert.style.display  = 'block';
-    // Auto-hide after 6 seconds
-    setTimeout(() => { formAlert.style.display = 'none'; }, 6000);
-}
-
-function validateForm() {
-    const name    = nameInput.value.trim();
-    const email   = emailInput.value.trim();
-    const message = msgInput.value.trim();
-
-    if (!name)                          { showFormAlert('error', 'Please enter your name.'); return false; }
-    if (!email || !isValidEmail(email)) { showFormAlert('error', 'Please enter a valid email address.'); return false; }
-    if (!message)                       { showFormAlert('error', 'Please write a message.'); return false; }
-    return true;
-}
-
-function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-submitBtn.addEventListener('click', async () => {
-    if (!validateForm()) return;
-
-    setFormLoading(true);
-    formAlert.style.display = 'none';
-
-    const payload = {
-        name:    nameInput.value.trim(),
-        email:   emailInput.value.trim(),
-        subject: subjectInput.value.trim() || 'No Subject',
-        message: msgInput.value.trim()
-    };
-
-    try {
-        const res = await fetch(`${API_BASE}/api/contact`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-            showFormAlert('success', '✅ Message sent! I\'ll get back to you soon.');
-            // Clear form
-            nameInput.value    = '';
-            emailInput.value   = '';
-            subjectInput.value = '';
-            msgInput.value     = '';
-        } else {
-            showFormAlert('error', data.error || 'Something went wrong. Please try again.');
-        }
-    } catch (err) {
-        console.error('Contact form error:', err);
-        showFormAlert('error', 'Could not reach the server. Please email me directly at tusharghuse93@gmail.com');
-    } finally {
-        setFormLoading(false);
-    }
-});
-
-// Allow Enter key to submit (but Shift+Enter for newline in textarea)
-[nameInput, emailInput, subjectInput].forEach(input => {
-    input.addEventListener('keydown', e => {
-        if (e.key === 'Enter') submitBtn.click();
-    });
-});
+// Contact form now posts directly to FormSubmit via plain HTML form.
+// Inputs include `name` attributes and hidden `_captcha` and `_next` fields in the HTML.
+// All submission handling is performed by FormSubmit; no client-side fetch is used.
 
 /* ============================================================
    8. UTILITY — HTML escape to prevent XSS
