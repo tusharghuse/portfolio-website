@@ -5,7 +5,6 @@ const connectDB = async () => {
     let triedPublicDns = false;
 
     const doConnect = async (uri) => {
-        console.log("MONGODB_URI =", uri || process.env.MONGODB_URI);
 
         const conn = await mongoose.connect(uri || process.env.MONGODB_URI, {
             serverSelectionTimeoutMS: 5000,

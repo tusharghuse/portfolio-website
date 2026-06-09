@@ -59,12 +59,7 @@ app.use('/api', limiter);
    CORS
    ============================================================ */
 
-app.use(
-    cors({
-        origin: process.env.CLIENT_URL || '*',
-        credentials: true
-    })
-);
+app.use(cors());
 
 /* ============================================================
    BODY PARSING

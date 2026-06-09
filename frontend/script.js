@@ -312,12 +312,45 @@ async function loadProjects() {
 loadProjects();
 
 /* ============================================================
-   7. CONTACT FORM — FormSubmit (no backend)
+   7. CONTACT FORM
    ============================================================ */
+const contactForm = document.getElementById('contactForm');
 
-// Contact form now posts directly to FormSubmit via plain HTML form.
-// Inputs include `name` attributes and hidden `_captcha` and `_next` fields in the HTML.
-// All submission handling is performed by FormSubmit; no client-side fetch is used.
+if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = {
+            name: document.getElementById('contactName').value,
+            email: document.getElementById('contactEmail').value,
+            subject: document.getElementById('contactSubject').value,
+            message: document.getElementById('contactMessage').value
+        };
+
+        try {
+            const response = await fetch('http://localhost:5000/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert('Message sent successfully!');
+                contactForm.reset();
+            } else {
+                alert(data.error || 'Failed to send message.');
+            }
+
+        } catch (error) {
+            console.error(error);
+            alert('Server connection failed.');
+        }
+    });
+}
 
 /* ============================================================
    8. UTILITY — HTML escape to prevent XSS
