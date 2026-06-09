@@ -261,15 +261,6 @@ function renderProjects(projects) {
         }
     });
 
-    // Add a placeholder "+ next project" card
-    html += `
-    <div class="project-card reveal" style="border-style:dashed; display:flex; align-items:center; justify-content:center; min-height:200px;">
-        <div style="text-align:center">
-            <div style="font-size:2rem; margin-bottom:0.75rem; opacity:0.3">+</div>
-            <div style="color:var(--muted); font-size:0.85rem; font-family:var(--mono)">// next project</div>
-        </div>
-    </div>`;
-
     projectsGrid.innerHTML = html;
 
     // Re-observe new reveal elements

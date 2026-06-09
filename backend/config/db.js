@@ -1,9 +1,9 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
 const dns = require('dns');
 
 const connectDB = async () => {
     let triedPublicDns = false;
-
     const doConnect = async (uri) => {
 
         const conn = await mongoose.connect(uri || process.env.MONGODB_URI, {

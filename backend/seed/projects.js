@@ -1,6 +1,7 @@
 /* Seed projects into MongoDB */
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
-require('dotenv').config();
 
 const connectDB = require('../config/db');
 const Project = require('../models/Project');
@@ -53,8 +54,11 @@ const projects = [
 ];
 
 const seedProjects = async () => {
+
     try {
         await connectDB();
+
+
         await Project.deleteMany();
         console.log('Old projects removed.');
         await Project.insertMany(projects);

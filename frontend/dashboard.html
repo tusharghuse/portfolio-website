@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b0b0b;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        /* Glass cards */
+        .card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 8px;
+            background: #1c1c1c;
+            color: white;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .btn-add {
+            background: #00ff88;
+        }
+
+        .btn-add:hover {
+            background: #00cc6a;
+        }
+
+        .btn-delete {
+            background: #ff3b3b;
+            color: white;
+        }
+
+        .btn-edit {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-save {
+            background: #facc15;
+            color: black;
+        }
+
+        /* Project card */
+        .project {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .project-info {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .success {
+            color: #00ff88;
+            margin-top: 10px;
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            .project {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .actions {
+                width: 100%;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>🚀 Admin Dashboard</h2>
+
+    <!-- ADD PROJECT -->
+    <div class="card">
+        <h3>Add New Project</h3>
+
+        <input id="title" placeholder="Project Title">
+        <textarea id="description" placeholder="Project Description"></textarea>
+        <input id="techStack" placeholder="Tech Stack (comma separated)">
+        <input id="tag" placeholder="Tag">
+
+        <button class="btn-add" onclick="addProject()">Add Project</button>
+
+        <div id="msg" class="success"></div>
+    </div>
+
+    <!-- PROJECT LIST -->
+    <div class="card">
+        <h3>Existing Projects</h3>
+        <div id="projectsList">Loading...</div>
+    </div>
+
+</div>
+
+<script>
+const API = "http://localhost:5000/api/projects";
+
+/* ---------------- ADD ---------------- */
+async function addProject() {
+    const project = {
+        title: title.value,
+        description: description.value,
+        techStack: techStack.value.split(","),
+        tag: tag.value
+    };
+
+    const res = await fetch(API, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "x-admin-key": localStorage.getItem("admin_key")
+        },
+        body: JSON.stringify(project)
+    });
+
+    if (res.ok) {
+        msg.innerText = "✅ Project added!";
+        loadProjects();
+    } else {
+        msg.innerText = "❌ Failed to add project";
+    }
+}
+
+/* ---------------- LOAD ---------------- */
+async function loadProjects() {
+    const res = await fetch(API);
+    const data = await res.json();
+
+    projectsList.innerHTML = data.map(p => `
+        <div class="project" id="card-${p._id}">
+
+            <div class="project-info">
+                <div id="view-${p._id}">
+                    <b>${p.title}</b><br>
+                    <small>${p.tag || ""}</small><br>
+                    <span style="color:#aaa">${p.description}</span>
+                </div>
+
+                <div id="edit-${p._id}" style="display:none">
+                    <input value="${p.title}" id="title-${p._id}">
+                    <input value="${p.tag || ""}" id="tag-${p._id}">
+                    <textarea id="desc-${p._id}">${p.description}</textarea>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-edit" onclick="enableEdit('${p._id}')">Edit</button>
+                <button class="btn-save" style="display:none" id="save-${p._id}" onclick="saveEdit('${p._id}')">Save</button>
+                <button class="btn-delete" onclick="deleteProject('${p._id}')">Delete</button>
+            </div>
+
+        </div>
+    `).join("");
+}
+
+/* ---------------- EDIT MODE ---------------- */
+function enableEdit(id) {
+    document.getElementById(`view-${id}`).style.display = "none";
+    document.getElementById(`edit-${id}`).style.display = "block";
+    document.getElementById(`save-${id}`).style.display = "inline-block";
+}
+
+/* ---------------- SAVE EDIT ---------------- */
+async function saveEdit(id) {
+
+    const updated = {
+        title: document.getElementById(`title-${id}`).value,
+        tag: document.getElementById(`tag-${id}`).value,
+        description: document.getElementById(`desc-${id}`).value
+    };
+
+    const res = await fetch(`${API}/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "x-admin-key": localStorage.getItem("admin_key")
+        },
+        body: JSON.stringify(updated)
+    });
+
+    if (res.ok) {
+        loadProjects();
+    }
+}
+
+/* ---------------- DELETE ---------------- */
+async function deleteProject(id) {
+    if (!confirm("Delete this project?")) return;
+
+    const res = await fetch(`${API}/${id}`, {
+        method: "DELETE",
+        headers: {
+            "x-admin-key": localStorage.getItem("admin_key")
+        }
+    });
+
+    if (res.ok) loadProjects();
+}
+
+/* INIT */
+loadProjects();
+</script>
+
+</body>
+</html>
