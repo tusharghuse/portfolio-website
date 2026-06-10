@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f0f0f;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .box {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #00ff88;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #00cc6a;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>Admin Access</h2>
+
+    <input id="adminKey" placeholder="Enter Admin Key">
+
+    <button onclick="enterAdmin()">Continue</button>
+
+    <div class="hint">
+        Protected Admin Panel
+    </div>
+</div>
+
+<script>
+function enterAdmin() {
+    const key = document.getElementById("adminKey").value;
+
+    if (!key) {
+        alert("Enter admin key");
+        return;
+    }
+
+    // store key for later API requests
+    localStorage.setItem("admin_key", key);
+
+    alert("Access granted");
+
+    // go to dashboard (your existing UI page)
+    window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>
