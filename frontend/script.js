@@ -7,7 +7,7 @@
 // During local development: 'http://localhost:5000'
 // After deploying backend to Render, replace with your Render URL:
 // e.g. 'https://tushar-portfolio-api.onrender.com'
-const API_BASE = 'http://localhost:5000';
+const API_BASE = 'https://portfolio-website-n3j1.onrender.com/api/projects';
 
 /* ============================================================
    1. CUSTOM CURSOR (preserved from original)
