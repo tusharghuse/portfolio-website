@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Admin Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,15 +25,16 @@
 
         /* Glass cards */
         .card {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 20px;
         }
 
-        input, textarea {
+        input,
+        textarea {
             width: 100%;
             padding: 10px;
             margin: 8px 0;
@@ -83,7 +85,7 @@
             padding: 15px;
             margin-bottom: 10px;
             border-radius: 10px;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             flex-wrap: wrap;
             gap: 10px;
         }
@@ -124,68 +126,68 @@
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <h2>🚀 Admin Dashboard</h2>
+        <h2>🚀 Admin Dashboard</h2>
 
-    <!-- ADD PROJECT -->
-    <div class="card">
-        <h3>Add New Project</h3>
+        <!-- ADD PROJECT -->
+        <div class="card">
+            <h3>Add New Project</h3>
 
-        <input id="title" placeholder="Project Title">
-        <textarea id="description" placeholder="Project Description"></textarea>
-        <input id="techStack" placeholder="Tech Stack (comma separated)">
-        <input id="tag" placeholder="Tag">
+            <input id="title" placeholder="Project Title">
+            <textarea id="description" placeholder="Project Description"></textarea>
+            <input id="techStack" placeholder="Tech Stack (comma separated)">
+            <input id="tag" placeholder="Tag">
 
-        <button class="btn-add" onclick="addProject()">Add Project</button>
+            <button class="btn-add" onclick="addProject()">Add Project</button>
 
-        <div id="msg" class="success"></div>
+            <div id="msg" class="success"></div>
+        </div>
+
+        <!-- PROJECT LIST -->
+        <div class="card">
+            <h3>Existing Projects</h3>
+            <div id="projectsList">Loading...</div>
+        </div>
+
     </div>
 
-    <!-- PROJECT LIST -->
-    <div class="card">
-        <h3>Existing Projects</h3>
-        <div id="projectsList">Loading...</div>
-    </div>
-
-</div>
-
-<script>
-const API = "https://portfolio-website-n3j1.onrender.com/api/projects";
+    <script>
+        const API = "https://portfolio-website-n3j1.onrender.com/api/projects";
 
 
-/* ---------------- ADD ---------------- */
-async function addProject() {
-    const project = {
-        title: title.value,
-        description: description.value,
-        techStack: techStack.value.split(","),
-        tag: tag.value
-    };
+        /* ---------------- ADD ---------------- */
+        async function addProject() {
+            const project = {
+                title: title.value,
+                description: description.value,
+                techStack: techStack.value.split(","),
+                tag: tag.value
+            };
 
-    const res = await fetch(API, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "x-admin-key": localStorage.getItem("admin_key")
-        },
-        body: JSON.stringify(project)
-    });
+            const res = await fetch(API, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-admin-key": localStorage.getItem("admin_key")
+                },
+                body: JSON.stringify(project)
+            });
 
-    if (res.ok) {
-        msg.innerText = "✅ Project added!";
-        loadProjects();
-    } else {
-        msg.innerText = "❌ Failed to add project";
-    }
-}
+            if (res.ok) {
+                msg.innerText = "✅ Project added!";
+                loadProjects();
+            } else {
+                msg.innerText = "❌ Failed to add project";
+            }
+        }
 
-/* ---------------- LOAD ---------------- */
-async function loadProjects() {
-    const res = await fetch(API);
-    const data = await res.json();
+        /* ---------------- LOAD ---------------- */
+        async function loadProjects() {
+            const res = await fetch(API);
+            const data = await res.json();
 
-    projectsList.innerHTML = data.map(p => `
+            projectsList.innerHTML = data.map(p => `
         <div class="project" id="card-${p._id}">
 
             <div class="project-info">
@@ -210,55 +212,56 @@ async function loadProjects() {
 
         </div>
     `).join("");
-}
-
-/* ---------------- EDIT MODE ---------------- */
-function enableEdit(id) {
-    document.getElementById(`view-${id}`).style.display = "none";
-    document.getElementById(`edit-${id}`).style.display = "block";
-    document.getElementById(`save-${id}`).style.display = "inline-block";
-}
-
-/* ---------------- SAVE EDIT ---------------- */
-async function saveEdit(id) {
-
-    const updated = {
-        title: document.getElementById(`title-${id}`).value,
-        tag: document.getElementById(`tag-${id}`).value,
-        description: document.getElementById(`desc-${id}`).value
-    };
-
-    const res = await fetch(`${API}/${id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "x-admin-key": localStorage.getItem("admin_key")
-        },
-        body: JSON.stringify(updated)
-    });
-
-    if (res.ok) {
-        loadProjects();
-    }
-}
-
-/* ---------------- DELETE ---------------- */
-async function deleteProject(id) {
-    if (!confirm("Delete this project?")) return;
-
-    const res = await fetch(`${API}/${id}`, {
-        method: "DELETE",
-        headers: {
-            "x-admin-key": localStorage.getItem("admin_key")
         }
-    });
 
-    if (res.ok) loadProjects();
-}
+        /* ---------------- EDIT MODE ---------------- */
+        function enableEdit(id) {
+            document.getElementById(`view-${id}`).style.display = "none";
+            document.getElementById(`edit-${id}`).style.display = "block";
+            document.getElementById(`save-${id}`).style.display = "inline-block";
+        }
 
-/* INIT */
-loadProjects();
-</script>
+        /* ---------------- SAVE EDIT ---------------- */
+        async function saveEdit(id) {
+
+            const updated = {
+                title: document.getElementById(`title-${id}`).value,
+                tag: document.getElementById(`tag-${id}`).value,
+                description: document.getElementById(`desc-${id}`).value
+            };
+
+            const res = await fetch(`${API}/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-admin-key": localStorage.getItem("admin_key")
+                },
+                body: JSON.stringify(updated)
+            });
+
+            if (res.ok) {
+                loadProjects();
+            }
+        }
+
+        /* ---------------- DELETE ---------------- */
+        async function deleteProject(id) {
+            if (!confirm("Delete this project?")) return;
+
+            const res = await fetch(`${API}/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "x-admin-key": localStorage.getItem("admin_key")
+                }
+            });
+
+            if (res.ok) loadProjects();
+        }
+
+        /* INIT */
+        loadProjects();
+    </script>
 
 </body>
+
 </html>
