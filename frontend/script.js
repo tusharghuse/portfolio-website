@@ -7,7 +7,7 @@
 // During local development: 'http://localhost:5000'
 // After deploying backend to Render, replace with your Render URL:
 // e.g. 'https://tushar-portfolio-api.onrender.com'
-const API_BASE = 'https://portfolio-website-n3j1.onrender.com/api/projects';
+const API_BASE = 'https://portfolio-website-n3j1.onrender.com';
 
 /* ============================================================
    1. CUSTOM CURSOR (preserved from original)
@@ -319,7 +319,7 @@ if (contactForm) {
         };
 
         try {
-            const response = await fetch('https://portfolio-website-n3j1.onrender.com/api/contact', {
+            const response = await fetch(`${API_BASE}/api/contact`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
