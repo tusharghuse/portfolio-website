@@ -58,8 +58,11 @@ app.use('/api', limiter);
 /* ============================================================
    CORS
    ============================================================ */
-
-app.use(cors());
+app.use(cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "x-admin-key"]
+}));
 
 /* ============================================================
    BODY PARSING
