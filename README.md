@@ -103,9 +103,7 @@ Consider giving the repository a star and sharing feedback.
 
 Main landing page of the portfolio website showcasing personal branding, navigation, and key highlights.
 
-```md
 ![Homepage](frontend/assets/images/homepage.png)
-```
 
 ---
 
@@ -113,9 +111,8 @@ Main landing page of the portfolio website showcasing personal branding, navigat
 
 Projects are dynamically fetched from the backend and displayed on the website.
 
-```md
 ![Projects Section](frontend/assets/images/projects_section.png)
-```
+
 
 ---
 
@@ -123,9 +120,7 @@ Projects are dynamically fetched from the backend and displayed on the website.
 
 MongoDB database storing project information that is served through the backend API and rendered on the website.
 
-```md
 ![MongoDB Projects Collection](frontend/assets/images/mongodb_projects.png)
-```
 
 ---
 
@@ -133,9 +128,7 @@ MongoDB database storing project information that is served through the backend 
 
 Interactive contact form allowing visitors to send messages and connect directly.
 
-```md
 ![Contact Form](frontend/assets/images/contact_form.png)
-```
 
 ---
 
@@ -143,10 +136,7 @@ Interactive contact form allowing visitors to send messages and connect directly
 
 Contact form submissions are stored securely in MongoDB and can be managed through the backend API.
 
-```md
 ![MongoDB Contact Messages](frontend/assets/images/mongodb_contact_data.png)
-```
 
-```
-```
+
 
